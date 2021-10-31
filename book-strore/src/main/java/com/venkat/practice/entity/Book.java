@@ -39,8 +39,9 @@ public class Book implements Serializable{
 	private static final long serialVersionUID = 3925284078651361048L;
 
 	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookId;
+	@Transient
+	private Date aTransactionTime;
 	
 	@Transient
 	private String aTransactionId;
@@ -89,6 +90,7 @@ public class Book implements Serializable{
 		for (Chapter chapter : chapters) {
 			chapter.setBook(this);
 			chapter.setTransactionId(this.aTransactionId);
+			chapter.setTransactionTime(this.aTransactionTime);
 		}
 	}
 	public Date getCreateTimestamp() {
@@ -104,7 +106,12 @@ public class Book implements Serializable{
 		this.updateTimestamp = updateTimestamp;
 	}
 	
-	
+	public Date getaTransactionTime() {
+		return aTransactionTime;
+	}
+	public void setaTransactionTime(Date aTransactionTime) {
+		this.aTransactionTime = aTransactionTime;
+	}
 	@Override
 	public String toString() {
 		return "Book [bookId=" + bookId + ", name=" + name + ", createTimestamp=" + createTimestamp

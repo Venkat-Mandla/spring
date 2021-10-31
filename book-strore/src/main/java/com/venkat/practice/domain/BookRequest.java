@@ -3,8 +3,6 @@
  */
 package com.venkat.practice.domain;
 
-import java.util.UUID;
-
 /**
  * @author VenkaT
  *

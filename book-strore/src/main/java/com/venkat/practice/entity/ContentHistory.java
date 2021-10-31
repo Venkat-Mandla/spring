@@ -21,6 +21,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -58,12 +59,19 @@ public class ContentHistory implements Serializable{
 	@Column(name="update_timestamp", updatable = true, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
 	private Date updateTimestamp;
+	
+	
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false,targetEntity = Chapter.class)
     @JoinColumns({@JoinColumn(name = "chapterNumber", nullable = false),@JoinColumn(name = "bookId", nullable = false)})
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Chapter chapter;
+	
+	@Column(name="transaction_timestamp", updatable = true, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date transactionTime;
 	
 	@Column
 	private String transactionId;
@@ -127,6 +135,7 @@ public class ContentHistory implements Serializable{
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
 		this.transactionId=chapter.getTransactionId();
+		this.transactionTime=chapter.getTransactionTime();
 	}
 	
 
@@ -136,6 +145,15 @@ public class ContentHistory implements Serializable{
 
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
+	}
+
+	
+	public Date getTransactionTime() {
+		return transactionTime;
+	}
+
+	public void setTransactionTime(Date transactionTime) {
+		this.transactionTime = transactionTime;
 	}
 
 	@Override

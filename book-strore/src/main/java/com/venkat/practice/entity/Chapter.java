@@ -49,7 +49,6 @@ public class Chapter implements Serializable{
 	private static final long serialVersionUID = -3005913579269517524L;
 
 	@Id
-//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int chapterNumber;
 	
 	@MapsId("bookId")
@@ -57,6 +56,10 @@ public class Chapter implements Serializable{
     @JoinColumn(name = "bookId", nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Book book;
+	
+	@Column(name="transaction_timestamp", updatable = true, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date transactionTime;
 	
 	@Column
 	private String name;
@@ -118,6 +121,7 @@ public class Chapter implements Serializable{
 	public void setBook(Book book) {
 		this.book = book;
 		this.transactionId=book.getaTransactionId();
+		this.transactionTime=book.getaTransactionTime();
 		setContentsHistory();
 	}
 	
@@ -145,6 +149,13 @@ public class Chapter implements Serializable{
 	}
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
+	}
+	
+	public Date getTransactionTime() {
+		return transactionTime;
+	}
+	public void setTransactionTime(Date transactionTime) {
+		this.transactionTime = transactionTime;
 	}
 	@Override
 	public String toString() {

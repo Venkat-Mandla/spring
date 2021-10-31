@@ -3,13 +3,9 @@
  */
 package com.venkat.practice.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
-import javax.persistence.Transient;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +21,6 @@ import com.venkat.practice.entity.Book;
 import com.venkat.practice.entity.Chapter;
 import com.venkat.practice.entity.ChapterId;
 import com.venkat.practice.entity.Content;
-import com.venkat.practice.entity.ContentHistory;
 import com.venkat.practice.entity.ContentId;
 import com.venkat.practice.exception.BookNotFoundException;
 import com.venkat.practice.exception.ChapterNotFoundException;
@@ -56,38 +51,41 @@ public class BookStoreService {
 	private ModelMapper modelMapper;
 
 	public BookResponse newBook(BookRequest book) {
-		book.setaTransactionId(builTransactionId());
+		populateTransactonDetails(book);
 		Book bookEntity = modelMapper.map(book, Book.class);
 		Book response = bookRepository.save(bookEntity);
-		// Result
-		// wordCountDiff=historyRepository.findWordCountDiff(response.getBookId());
-		// Result wordAvg=historyRepository.findWordCountAvg(response.getBookId());
-
-		List<Result> wordStats = historyRepository.findStats(response.getBookId(), PageRequest.of(0, 2));
-		System.out.println("Results - " + wordStats);
-
-		String s = null;
-		if (wordStats.size() == 1) {
-			s = "Wow. You typed " + wordStats.get(0).getCount() + " words on your first submission";
-		} else if (wordStats.size() >= 1) {
-
-			int newCount = wordStats.get(0).getCount();
-			int previousCount = wordStats.get(1).getCount();
-
-			Date newTimestamp = wordStats.get(0).getUpdateTimestamp();
-			Date previousTimestamp = wordStats.get(1).getUpdateTimestamp();
-			int diffCount = newCount - previousCount;
-			s = "Wow. You typed " + diffCount + " words b/w " + newTimestamp + " and " + previousTimestamp
-					+ "	Average number of words between two timestamps? " + (diffCount / 2) + "(TBD -add ts) b/w "
-					+ newTimestamp + " and " + previousTimestamp;
-		}
+		List<Result> wordStats = historyRepository.findStats1(response.getBookId(), PageRequest.of(0, 2));
 		BookResponse a = modelMapper.map(response, BookResponse.class);
-		a.setMessage(s);
+		String message = buildResponseMessage(wordStats);
+		a.setMessage(message);
 		return a;
 	}
 
-	private synchronized long builTransactionId() {
-		return System.currentTimeMillis();
+	private String buildResponseMessage(List<Result> wordStats) {
+		String message = null;
+		if (wordStats.size() == 1) {
+			message = "Wow. You typed " + wordStats.get(0).getCount() + " words on your first submission";
+		} else if (wordStats.size() >= 1) {
+			
+			int newCount = wordStats.get(0).getCount();
+			int previousCount = wordStats.get(1).getCount();
+			
+			Date newTimestamp = wordStats.get(0).getUpdateTimestamp();
+			Date previousTimestamp = wordStats.get(1).getUpdateTimestamp();
+			
+			long timeDiff=(newTimestamp.getTime() - previousTimestamp.getTime())/(1000*60);
+			
+			int diffCount = newCount - previousCount;
+			message = "Wow. You typed " + diffCount + " words in " +timeDiff
+					+ " Minutes, Average number of words between two timestamps? count: " + (diffCount / (timeDiff==0?1:timeDiff)) + ", times: "
+					+ newTimestamp + " and " + previousTimestamp;
+		}
+		return message;
+	}
+
+	private synchronized void populateTransactonDetails(BookRequest book) {
+		book.setaTransactionId(System.currentTimeMillis());
+		book.setaTransactionTime(new Date());
 	}
 
 	public BookResponse get(int bookId) {
