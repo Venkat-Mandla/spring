@@ -1,24 +1,25 @@
 {
-
+"id": 1,
   "name": "Story",
-  "pages": [
+  "chapters": [
     {
-      "book": null,
+      "chapterNumber": 1,
+      "name": "Java_Intro",
       "contents": [
         {
-          "contentId": null,
-          "data": "Venkat",
-          "page": null
+          "contentId": 1,
+          "data": "Venkat-new",
+          "wordCount":30
         },
         {
-          "contentId": null,
-          "data": "hahahah",
-          "page": null
+          "contentId": 2,
+          "data": "hahahah1_new",
+          "wordCount":50
         },
         {
-          "contentId": null,
-          "data": "Vamsi",
-          "page": null
+          "contentId": 3,
+          "data": "Vamsi_new",
+          "wordCount":100
         }
       ]
     }
