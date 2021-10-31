@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import javax.persistence.Transient;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,21 +56,8 @@ public class BookStoreService {
 	private ModelMapper modelMapper;
 
 	public BookResponse newBook(BookRequest book) {
+		book.setaTransactionId(builTransactionId());
 		Book bookEntity = modelMapper.map(book, Book.class);
-		List<Chapter> chapters = bookEntity.getChapters();
-		//TODO find better way to copy content to contentHistory
-		for (Chapter chapter : chapters) {
-			List<ContentHistory> histories = new ArrayList<>();
-			for (Content content : chapter.getContents()) {
-				ContentHistory history = new ContentHistory();
-				history.setChapter(chapter);
-				history.setContentId(content.getContentId());
-				history.setWordCount(content.getWordCount());
-				history.setData(content.getData());
-				histories.add(history);
-			}
-			chapter.setContentsHistory(histories);
-		}
 		Book response = bookRepository.save(bookEntity);
 		// Result
 		// wordCountDiff=historyRepository.findWordCountDiff(response.getBookId());
@@ -94,6 +84,10 @@ public class BookStoreService {
 		BookResponse a = modelMapper.map(response, BookResponse.class);
 		a.setMessage(s);
 		return a;
+	}
+
+	private synchronized long builTransactionId() {
+		return System.currentTimeMillis();
 	}
 
 	public BookResponse get(int bookId) {

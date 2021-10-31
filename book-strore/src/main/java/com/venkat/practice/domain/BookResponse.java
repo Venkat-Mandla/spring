@@ -42,8 +42,8 @@ public class BookResponse extends Book {
 	}
 	@Override
 	public String toString() {
-		return "BookResponse [createTimestamp=" + createTimestamp + ", updateTimestamp=" + updateTimestamp
-				+ ", getId()=" + getId() + ", getName()=" + getName() + ", getChapters()=" + getChapters() + "]";
+		return "BookResponse [message=" + message + ", createTimestamp=" + createTimestamp + ", updateTimestamp="
+				+ updateTimestamp + "]";
 	}
 	
 }

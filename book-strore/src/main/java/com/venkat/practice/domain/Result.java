@@ -24,6 +24,17 @@ public class Result {
 		this.count =(int) count;
 	}
 
+	public Result(String transactionId,Date updateTimestamp, long count) {
+		super();
+		this.updateTimestamp = updateTimestamp;
+		this.count = (int)count;
+	}
+	
+	public Result(String transactionId,long count) {
+		super();
+		this.count = (int)count;
+	}
+	
 	public Result(Date updateTimestamp, long count) {
 		super();
 		this.updateTimestamp = updateTimestamp;

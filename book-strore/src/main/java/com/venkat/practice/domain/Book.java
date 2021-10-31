@@ -17,19 +17,27 @@ public class Book implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 4875650997860853418L;
-	private int id;
+	private long aTransactionId;
+	private long bookId;
 	private String name;
 	private List<Chapter> chapters;
+	public Book(long transactionId) {
+		chapters=new ArrayList<>();
+		this.aTransactionId=transactionId;
+	}
+	
 	public Book() {
 		chapters=new ArrayList<>();
 	}
 	
-	public int getId() {
-		return id;
+	public long getBookId() {
+		return bookId;
 	}
-	public void setId(int id) {
-		this.id = id;
+
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -42,9 +50,18 @@ public class Book implements Serializable{
 	public void setChapters(List<Chapter> chapters) {
 		this.chapters = chapters;
 	}
+	
+	public long getaTransactionId() {
+		return aTransactionId;
+	}
+
+	public void setaTransactionId(long aTransactionId) {
+		this.aTransactionId = aTransactionId;
+	}
+
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", name=" + name + ", chapters=" + chapters + "]";
+		return "Book [id=" + bookId + ", name=" + name + ", chapters=" + chapters + "]";
 	}
 	
 }

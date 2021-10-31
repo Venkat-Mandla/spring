@@ -16,10 +16,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * @author VenkaT
+ *
+ */
 /**
  * @author VenkaT
  *
@@ -36,6 +41,9 @@ public class Book implements Serializable{
 	@Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookId;
+	
+	@Transient
+	private String aTransactionId;
 	
 	@Column
 	private String name;
@@ -66,7 +74,13 @@ public class Book implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	public String getaTransactionId() {
+		return aTransactionId;
+	}
+	public void setaTransactionId(String aTransactionId) {
+		this.aTransactionId = aTransactionId;
+	}
 	public List<Chapter> getChapters() {
 		return chapters;
 	}
@@ -74,6 +88,7 @@ public class Book implements Serializable{
 		this.chapters = chapters;
 		for (Chapter chapter : chapters) {
 			chapter.setBook(this);
+			chapter.setTransactionId(this.aTransactionId);
 		}
 	}
 	public Date getCreateTimestamp() {
@@ -88,6 +103,8 @@ public class Book implements Serializable{
 	public void setUpdateTimestamp(Date updateTimestamp) {
 		this.updateTimestamp = updateTimestamp;
 	}
+	
+	
 	@Override
 	public String toString() {
 		return "Book [bookId=" + bookId + ", name=" + name + ", createTimestamp=" + createTimestamp

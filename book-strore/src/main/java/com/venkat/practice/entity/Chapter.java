@@ -5,10 +5,8 @@ package com.venkat.practice.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -31,8 +29,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author VenkaT
@@ -80,15 +76,15 @@ public class Chapter implements Serializable{
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateTimestamp;
-
+	
+	@Transient
+	private String transactionId;
+	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 	public List<Content> getContents() {
 		return contents;
@@ -103,16 +99,27 @@ public class Chapter implements Serializable{
 	public List<ContentHistory> getContentsHistory() {
 		return this.contentsHistory;
 	}
-	public void setContentsHistory(List<ContentHistory> contentsHistory) {
-		this.contentsHistory = contentsHistory;
+	public void setContentsHistory() {
+		List<ContentHistory> histories = new ArrayList<>();
+		for (Content content : getContents()) {
+			ContentHistory history = new ContentHistory();
+			history.setContentId(content.getContentId());
+			history.setWordCount(content.getWordCount());
+			history.setData(content.getData());
+			history.setChapter(this);
+			history.setTransactionId(getTransactionId());
+			histories.add(history);
+		}
+		this.contentsHistory = histories;
 	}
 	public Book getBook() {
 		return book;
 	}
 	public void setBook(Book book) {
 		this.book = book;
+		this.transactionId=book.getaTransactionId();
+		setContentsHistory();
 	}
-	
 	
 	public Date getCreateTimestamp() {
 		return createTimestamp;
@@ -131,6 +138,13 @@ public class Chapter implements Serializable{
 	}
 	public void setChapterNumber(int chapterNumber) {
 		this.chapterNumber = chapterNumber;
+	}
+	
+	public String getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
 	}
 	@Override
 	public String toString() {

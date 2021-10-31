@@ -20,7 +20,6 @@ public class Chapter implements Serializable{
 	private int chapterNumber;
 	private String name;
 	private List<Content> contents;
-	
 	public Chapter() {
 		contents=new ArrayList<>();
 	}
@@ -43,6 +42,7 @@ public class Chapter implements Serializable{
 	public void setContents(List<Content> contents) {
 		this.contents = contents;
 	}
+	
 	@Override
 	public String toString() {
 		return "Chapter [chapterNumber=" + chapterNumber + ", name=" + name + ", contents=" + contents + "]";
