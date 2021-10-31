@@ -16,6 +16,8 @@ public class BookResponse extends Book {
 	 */
 	private static final long serialVersionUID = 8626865507727952202L;
 	
+	private String message;
+	
 	private Date createTimestamp;
 	private Date updateTimestamp;
 	public Date getCreateTimestamp() {
@@ -29,6 +31,14 @@ public class BookResponse extends Book {
 	}
 	public void setUpdateTimestamp(Date updateTimestamp) {
 		this.updateTimestamp = updateTimestamp;
+	}
+	
+	
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	@Override
 	public String toString() {

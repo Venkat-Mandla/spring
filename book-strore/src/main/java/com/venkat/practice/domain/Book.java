@@ -4,6 +4,7 @@
 package com.venkat.practice.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,10 @@ public class Book implements Serializable{
 	private int id;
 	private String name;
 	private List<Chapter> chapters;
+	public Book() {
+		chapters=new ArrayList<>();
+	}
+	
 	public int getId() {
 		return id;
 	}

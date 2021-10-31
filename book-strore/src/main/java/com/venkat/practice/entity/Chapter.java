@@ -5,8 +5,10 @@ package com.venkat.practice.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,11 +23,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author VenkaT
@@ -35,7 +42,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table
 @IdClass(ChapterId.class)
 public class Chapter implements Serializable{
+	
 
+	@Autowired
+	@Transient
+	private ModelMapper modelMapper;
 	/**
 	 * 
 	 */
@@ -56,6 +67,9 @@ public class Chapter implements Serializable{
 	
 	@OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL,targetEntity = Content.class)
 	private List<Content> contents=new ArrayList<>();
+	
+	@OneToMany(mappedBy = "chapter",cascade = CascadeType.ALL,targetEntity = ContentHistory.class)
+	private List<ContentHistory> contentsHistory=new ArrayList<>();
 	
 	@Column(name="create_timestamp", updatable = false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	@CreationTimestamp
@@ -86,6 +100,12 @@ public class Chapter implements Serializable{
 		}
 	}
 	
+	public List<ContentHistory> getContentsHistory() {
+		return this.contentsHistory;
+	}
+	public void setContentsHistory(List<ContentHistory> contentsHistory) {
+		this.contentsHistory = contentsHistory;
+	}
 	public Book getBook() {
 		return book;
 	}

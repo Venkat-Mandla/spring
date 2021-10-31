@@ -16,5 +16,7 @@ import com.venkat.practice.entity.ContentId;
  */
 @Repository
 public interface ContentRepository extends JpaRepository<Content, ContentId> {
+	
+	
 
 }
